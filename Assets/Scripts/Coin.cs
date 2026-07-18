@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Coin : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class Coin : MonoBehaviour
     [SerializeField] private float bobHeight = 0.5f;
     [SerializeField] private float bobSpeed = 2f;
     [SerializeField] private ScoreManager score;
-
+    [SerializeField] private UnityEvent onCoinPickedUp;
     private Vector3 startPosition;
     private float minY;
     private float maxY;

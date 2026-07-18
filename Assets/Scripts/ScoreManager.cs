@@ -5,7 +5,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private int winScore = 50;
     private int score;
 
-    [SerializeField] public CoinSpawner coinSpawn;
+    [SerializeField] private CoinSpawner coinSpawn;
 
     public bool HasAchievedWinScore()
     {
@@ -20,8 +20,7 @@ public class ScoreManager : MonoBehaviour
             Debug.Log(score);
             if (score >= winScore)
             {
-                Debug.Log("You win");
-                coinSpawn.CancelInvoke(nameof(coinSpawn.SpawnCoin));
+                GameManager.Instance.TriggerWin();
             }
         }
     }

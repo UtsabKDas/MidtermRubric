@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (playerHealth.IsDead || score.HasAchievedWinScore())
+        if (GameManager.Instance.IsGameOver)
         {
             enabled = false;
             return;

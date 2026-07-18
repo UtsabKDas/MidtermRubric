@@ -19,7 +19,6 @@ public class CoinSpawner : MonoBehaviour
             SpawnCoin();
         }
         InvokeRepeating(nameof(SpawnCoin), spawnDelay, spawnInterval);
-        Debug.Log(nameof(SpawnCoin));
     }
 
     private void Update()

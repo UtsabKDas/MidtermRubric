@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (playerHealth.IsDead || score.HasAchievedWinScore())
+        if (GameManager.Instance.IsGameOver)
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;

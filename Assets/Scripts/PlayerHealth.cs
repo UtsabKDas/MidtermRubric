@@ -22,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
         {
             currentHealth = 0;
             IsDead = true;
-            Debug.Log("You lose");
+            GameManager.Instance.TriggerLose();
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ObstacleSpawner : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private PlayerHealth playerHealth;
 
     private int currentObstacleCount;
-    private float spawnTimer;
+    
 
     private void Start()
     {
@@ -20,7 +21,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (playerHealth.IsDead)
+        if (GameManager.Instance.IsGameOver)
         {
             return;
         }
@@ -41,6 +42,9 @@ public class ObstacleSpawner : MonoBehaviour
     public void ObstacleDestroyed()
     {
         currentObstacleCount--;
-        Invoke(nameof(SpawnObstacle), spawnInterval);
+        if (!GameManager.Instance.IsGameOver)
+        {
+            Invoke(nameof(SpawnObstacle), spawnInterval);
+        }
     }
 }
