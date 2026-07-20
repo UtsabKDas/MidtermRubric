@@ -3,7 +3,6 @@ using UnityEngine;
 public class HeslerCameraController : MonoBehaviour
 {
     [SerializeField] private Transform target;
-    [SerializeField] private float distance = 5f;
     [SerializeField] private Vector3 mouseInput;
     [SerializeField] private float mouseSensitivity = 3f;
     [SerializeField] private float minPitch = -30f;

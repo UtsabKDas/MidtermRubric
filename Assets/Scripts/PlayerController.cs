@@ -8,7 +8,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private ScoreManager score;
-    
+
+    public InputSystem_Actions inputSystemActions;
+    private InputSystem_Actions.PlayerActions playerActions;
+
     private Rigidbody rb;
     private bool isGrounded;
     private float horizontal;
@@ -17,9 +20,23 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        inputSystemActions = new InputSystem_Actions();
+        playerActions = inputSystemActions.Player;
+
+        
+
         playerHealth = GetComponent<PlayerHealth>();
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    private void OnEnable()
+    {
+        playerActions.Pause.performed += GameManager.Instance.HUDManager.Pause;
+    }
+    private void OnDisable()
+    {
+        playerActions.Pause.performed -= GameManager.Instance.HUDManager.Pause;
     }
 
     private void Update()
@@ -35,6 +52,19 @@ public class PlayerController : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
         CheckGrounded();
         HandleJump();
+
+        if (Input.GetButtonDown("Pause"))
+        {
+            HUDManager hudManager = GameManager.Instance.HUDManager;
+            if (hudManager.IsPaused)
+            {
+                GameManager.Instance.HUDManager.Unpause();
+            }
+            else
+            {
+                GameManager.Instance.HUDManager.Pause();
+            }
+        }
     }
 
     private void FixedUpdate()

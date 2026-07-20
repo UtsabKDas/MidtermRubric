@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CoinSpawner coinSpawner;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private HeslerCameraController cameraController;
+    public HUDManager HUDManager;
+
     public bool IsGameOver { get; private set; }
 
     private void Awake()
@@ -40,6 +42,10 @@ public class GameManager : MonoBehaviour
         if(cameraController != null)
         {
             cameraController = FindAnyObjectByType<HeslerCameraController>();
+        }
+        if(HUDManager != null)
+        {
+            HUDManager = FindAnyObjectByType<HUDManager>();
         }
     }
 

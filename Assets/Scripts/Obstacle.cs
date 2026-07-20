@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private int maxDamage = 5;
 
     private Rigidbody rb;
-    private int damage;
+    [SerializeField] private int damage;
     private ObstacleSpawner spawner;
 
     private void Awake()

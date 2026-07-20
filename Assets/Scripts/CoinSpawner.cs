@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CoinSpawner : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class CoinSpawner : MonoBehaviour
         {
             SpawnCoin();
         }
-        InvokeRepeating(nameof(SpawnCoin), spawnDelay, spawnInterval);
+        StartCoroutine(SpawnLoop());
     }
 
     private void Update()
@@ -26,13 +27,27 @@ public class CoinSpawner : MonoBehaviour
         
     }
 
+    private IEnumerator SpawnLoop()
+    {
+        yield return new WaitForSeconds(spawnDelay);
+        while(true)
+        {
+            if(GameManager.Instance.IsGameOver)
+            {
+                yield break;
+            }
+            SpawnCoin();
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+
     public void SpawnCoin()
     {
         float x = Random.Range(-areaSize.x / 2f, areaSize.x / 2f);
         float z = Random.Range(-areaSize.y / 2f, areaSize.y / 2f);
         Vector3 position = new Vector3(x, spawnVerticalOffset, z);
 
-        
         Coin coinToSpawn = coinPrefabs[Random.Range(0, coinPrefabs.Length)];
         Coin spawnedCoin = Instantiate(coinToSpawn, position, coinToSpawn.transform.rotation, transform);
         spawnedCoin.SetScoreManager(scoreManager);

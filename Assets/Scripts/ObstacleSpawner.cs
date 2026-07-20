@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ObstacleSpawner : MonoBehaviour
 {
@@ -16,19 +17,42 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(SpawnObstacle), spawnDelay, spawnInterval);
+        StartCoroutine(SpawnLoop());
+        //InvokeRepeating(nameof(SpawnObstacle), spawnDelay, spawnInterval);
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    if (GameManager.Instance.IsGameOver)
+    //    {
+    //        return;
+    //    }
+    //    if (currentObstacleCount >= maxObstacles && IsInvoking(nameof(SpawnObstacle)))
+    //    {
+    //        CancelInvoke(nameof(SpawnObstacle));
+    //    }
+    //}
+
+
+    private IEnumerator SpawnLoop()
     {
-        if (GameManager.Instance.IsGameOver)
+        yield return new WaitForSeconds(spawnDelay);
+
+        while(true)
         {
-            return;
-        }
-        if (currentObstacleCount >= maxObstacles && IsInvoking(nameof(SpawnObstacle)))
-        {
-            CancelInvoke(nameof(SpawnObstacle));
-        }
+            if(GameManager.Instance.IsGameOver)
+            {
+                yield break;
+            }
+            yield return new WaitUntil(IsCurrentCountLessThanMaxObstacleCount);
+            SpawnObstacle();
+            yield return new WaitForSeconds(spawnInterval);
+        }   
+    }
+
+    private bool IsCurrentCountLessThanMaxObstacleCount()
+    {
+        return currentObstacleCount < maxObstacles;
     }
 
     private void SpawnObstacle()
@@ -42,9 +66,9 @@ public class ObstacleSpawner : MonoBehaviour
     public void ObstacleDestroyed()
     {
         currentObstacleCount--;
-        if (!GameManager.Instance.IsGameOver)
-        {
-            Invoke(nameof(SpawnObstacle), spawnInterval);
-        }
+        //if (!GameManager.Instance.IsGameOver)
+        //{
+        //    Invoke(nameof(SpawnObstacle), spawnInterval);
+        //}
     }
 }
