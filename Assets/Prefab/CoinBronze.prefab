@@ -135,3 +135,4 @@ MonoBehaviour:
   onCoinPickedUp:
     m_PersistentCalls:
       m_Calls: []
+  coinType: 1

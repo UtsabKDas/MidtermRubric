@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         Instance = this;
+     
     }
 
     private void Start()
@@ -47,6 +48,21 @@ public class GameManager : MonoBehaviour
         {
             HUDManager = FindAnyObjectByType<HUDManager>();
         }
+        scoreManager.Score = PlayerPrefs.GetInt("Score", 0);
+        HUDManager.UpdateScore(scoreManager.Score);
+
+        float playerX = PlayerPrefs.GetFloat("PlayerX", 0);
+        float playerY = PlayerPrefs.GetFloat("PlayerY", 0);
+        float playerZ = PlayerPrefs.GetFloat("PlayerZ", 0);
+
+        playerController.transform.position = new Vector3(playerX, playerY, playerZ);
+        playerController.GetComponent<PlayerHealth>().CurrentHealth = PlayerPrefs.GetInt("PlayerHealth", 0);
+
+    }
+
+    public void OtherOnHealthChangedSubscriber(int x, int y )
+    {
+        Debug.Log(x + y);
     }
 
     public void TriggerWin()
@@ -76,5 +92,20 @@ public class GameManager : MonoBehaviour
         }
         TriggerGameOver();
         Debug.Log("You lose");
+    }
+
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
+
+    public void Save()
+    {
+        PlayerPrefs.SetInt("Score", scoreManager.Score);
+        PlayerPrefs.SetInt("PlayerHealth", playerController.GetComponent<PlayerHealth>().CurrentHealth);
+        PlayerPrefs.SetFloat("PlayerX", playerController.transform.position.x);
+        PlayerPrefs.SetFloat("PlayerY", playerController.transform.position.y);
+        PlayerPrefs.SetFloat("PlayerZ", playerController.transform.position.z);
+        PlayerPrefs.Save();
     }
 }

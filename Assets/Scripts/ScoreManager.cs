@@ -1,22 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
+using System.Collections.Generic;
 
 public class ScoreManager : MonoBehaviour
 {
     [Header("Score")]
     [SerializeField] private int winScore = 50;
-    private int score;
+    public int Score { get; set; }
 
     [Header("Coin")]
     [SerializeField] private CoinSpawner coinSpawn;
 
     [SerializeField] private HUDManager hud;
 
+    private Dictionary<Coin.CoinType, int> numOfEachCoinType = new Dictionary<Coin.CoinType, int>();
+
     private void Start()
     {
-        if(hud == null)
+        numOfEachCoinType.Add(Coin.CoinType.bronze, 0);
+        numOfEachCoinType.Add(Coin.CoinType.silver, 0);
+        numOfEachCoinType.Add(Coin.CoinType.gold, 0);
+
+        if (hud == null)
         {
             hud = GameManager.Instance.HUDManager;
         }
@@ -24,22 +30,24 @@ public class ScoreManager : MonoBehaviour
 
     public bool HasAchievedWinScore()
     {
-        return score > winScore;
+        return Score > winScore;
     }
 
     public bool HasNotAchievedWinScore()
     {
-        return score < winScore;
+        return Score < winScore;
     }
 
-    public void AddScore(int amount)
+    public void AddScore(Coin.CoinType coinType, int amount)
     {
         if (!HasAchievedWinScore())
         {
-            score += amount;
-            hud.UpdateScore(score);
-            Debug.Log(score);
-            if (score >= winScore)
+            Score += amount;
+            hud.UpdateScore(Score);
+            
+            numOfEachCoinType[coinType]++;
+            Debug.Log(Score);
+            if (Score >= winScore)
             {
                 GameManager.Instance.TriggerWin();
             }

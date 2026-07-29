@@ -3,12 +3,14 @@ using UnityEngine.Events;
 
 public class Coin : MonoBehaviour
 {
+    public enum CoinType { invalid, bronze, silver, gold};
     [SerializeField] private int coinValue = 1;
     [SerializeField] private float rotateSpeed = 90f;
     [SerializeField] private float bobHeight = 0.5f;
     [SerializeField] private float bobSpeed = 2f;
     [SerializeField] private ScoreManager score;
     [SerializeField] private UnityEvent onCoinPickedUp;
+    [SerializeField] CoinType coinType;
     private Vector3 startPosition;
     private float minY;
     private float maxY;
@@ -36,7 +38,7 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            score.AddScore(coinValue);
+            score.AddScore(coinType, coinValue);
             Destroy(gameObject);
         }
     }

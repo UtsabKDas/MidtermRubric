@@ -132,3 +132,7 @@ MonoBehaviour:
   bobHeight: 0.5
   bobSpeed: 2
   score: {fileID: 0}
+  onCoinPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+  coinType: 2

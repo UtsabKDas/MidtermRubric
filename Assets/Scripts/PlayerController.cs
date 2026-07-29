@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private ScoreManager score;
 
-    public InputSystem_Actions inputSystemActions;
+    public InputSystem_Actions InputSystemActions;
     private InputSystem_Actions.PlayerActions playerActions;
 
     private Rigidbody rb;
@@ -20,10 +21,8 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
-        inputSystemActions = new InputSystem_Actions();
-        playerActions = inputSystemActions.Player;
-
-        
+        InputSystemActions = new InputSystem_Actions();
+        playerActions = InputSystemActions.Player;
 
         playerHealth = GetComponent<PlayerHealth>();
         rb = GetComponent<Rigidbody>();
@@ -32,11 +31,18 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        playerActions.Pause.performed += GameManager.Instance.HUDManager.Pause;
+        playerActions.Move.performed += HandleMovementInput;
+        playerActions.Move.canceled += HandleMovementInput;
+        playerActions.Pause.performed += GameManager.Instance.HUDManager.OnPauseInputPressed;
+        playerActions.Enable();
     }
+
     private void OnDisable()
     {
-        playerActions.Pause.performed -= GameManager.Instance.HUDManager.Pause;
+        playerActions.Move.performed -= HandleMovementInput;
+        playerActions.Move.canceled -= HandleMovementInput;
+        playerActions.Pause.performed -= GameManager.Instance.HUDManager.OnPauseInputPressed;
+        playerActions.Disable();
     }
 
     private void Update()
@@ -48,23 +54,23 @@ public class PlayerController : MonoBehaviour
             enabled = false;
             return;
         }
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+        //horizontal = Input.GetAxis("Horizontal");
+        //vertical = Input.GetAxis("Vertical");
         CheckGrounded();
         HandleJump();
 
-        if (Input.GetButtonDown("Pause"))
-        {
-            HUDManager hudManager = GameManager.Instance.HUDManager;
-            if (hudManager.IsPaused)
-            {
-                GameManager.Instance.HUDManager.Unpause();
-            }
-            else
-            {
-                GameManager.Instance.HUDManager.Pause();
-            }
-        }
+       //if (Input.GetButtonDown("Pause"))
+       //{
+       //    HUDManager hudManager = GameManager.Instance.HUDManager;
+       //    if (hudManager.IsPaused)
+       //    {
+       //        GameManager.Instance.HUDManager.Unpause();
+       //    }
+       //    else
+       //    {
+       //        GameManager.Instance.HUDManager.Pause();
+       //    }
+       //}
     }
 
     private void FixedUpdate()
@@ -75,6 +81,13 @@ public class PlayerController : MonoBehaviour
     private void CheckGrounded()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+    }
+
+    private void HandleMovementInput(InputAction.CallbackContext value)
+    {
+        Vector2 moveInput = value.ReadValue<Vector2>();
+        horizontal = moveInput.x;
+        vertical = moveInput.y;
     }
 
     private void HandleMovement()
